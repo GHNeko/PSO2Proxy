@@ -57,7 +57,7 @@ def doRedisGchat(message):
                 if lookup_gchatmode(client.preferences) == 0:
                     client.get_handle().send_crypto_packet(packetFactory.TeamChatPacket(gchatMsg['playerId'], "[GIRC] %s" % gchatMsg['playerName'], "[GIRC] %s" % gchatMsg['playerName'], "%s%s" % (client.preferences.get_preference('globalChatPrefix'), replace_irc_with_pso2(strgchatmsg).decode('utf-8', 'ignore'))).build())
                 else:
-                    client.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[%s] %s" % (gchatMsg['playerName'], "%s%s" % (client.preferences.get_preference('globalChatPrefix'), replace_irc_with_pso2(strgchatmsg).decode('utf-8', 'ignore'))), 0x3).build())
+                    client.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[GIRC] <%s> %s" % (gchatMsg['playerName'], "%s%s" % (client.preferences.get_preference('globalChatPrefix'), replace_irc_with_pso2(strgchatmsg).decode('utf-8', 'ignore'))), 0x3).build())
     else:
         if ircMode:
                 global ircBot
@@ -68,7 +68,7 @@ def doRedisGchat(message):
                     if lookup_gchatmode(client_data.preferences) == 0:
                         client_data.get_handle().send_crypto_packet(packetFactory.TeamChatPacket(gchatMsg['playerId'], "(%s) [%s] %s" % (gchatMsg['server'], shipl, gchatMsg['playerName']), gchatMsg['playerName'], "%s%s" % (client_data.preferences.get_preference('globalChatPrefix'), gchatMsg['text'])).build())
                     else:
-                        client_data.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[%s] [%s] %s" % (shipl, gchatMsg['playerName'], "%s%s" % (client_data.preferences.get_preference('globalChatPrefix'), gchatMsg['text'])), 0x3).build())
+                        client_data.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("(%s) [%s] <%s> %s" % (gchatMsg['server'], shipl, gchatMsg['playerName'], "%s%s" % (client_data.preferences.get_preference('globalChatPrefix'), gchatMsg['text'])), 0x3).build())
 
 
 if redisEnabled:
@@ -157,7 +157,7 @@ if ircMode:
                         if lookup_gchatmode(client.preferences) == 0:
                             client.get_handle().send_crypto_packet(packetFactory.TeamChatPacket(self.get_user_id(nickmsg), "[GIRC] %s" % nickmsg, "[GIRC] %s" % nickmsg, "%s%s" % (client.preferences.get_preference('globalChatPrefix'), pso2msg)).build())
                         else:
-                            client.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[%s] %s" % (nickmsg, "%s%s" % (client.preferences.get_preference('globalChatPrefix'), pso2msg)), 0x3).build())
+                            client.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[GIRC] <%s> %s" % (nickmsg, "%s%s" % (client.preferences.get_preference('globalChatPrefix'), pso2msg)), 0x3).build())
             else:
                 if not discord:
                     print("[IRC] <%s> %s" % (user.encode('ascii', 'ignore'), msg.encode('ascii', 'ignore')))
@@ -182,7 +182,7 @@ if ircMode:
                         if lookup_gchatmode(client.preferences) == 0:
                             client.get_handle().send_crypto_packet(packetFactory.TeamChatPacket(self.get_user_id(user.split("!")[0]), "[GIRC] %s" % user.split("!")[0], "[GIRC] %s" % user.split("!")[0], "* %s%s" % (client.preferences.get_preference('globalChatPrefix'), replace_irc_with_pso2(msg).decode('utf-8', 'ignore'))).build())
                         else:
-                            client.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[%s] * %s" % (user.split("!")[0], "%s%s" % (client.preferences.get_preference('globalChatPrefix'), replace_irc_with_pso2(msg).decode('utf-8', 'ignore'))), 0x3).build())
+                            client.get_handle().send_crypto_packet(packetFactory.SystemMessagePacket("[GIRC] <%s> * %s" % (user.split("!")[0], "%s%s" % (client.preferences.get_preference('globalChatPrefix'), replace_irc_with_pso2(msg).decode('utf-8', 'ignore'))), 0x3).build())
 
         def send_global_message(self, ship, user, message, server=None):
             if not check_pso2_with_irc(message):
@@ -224,7 +224,6 @@ if ircMode:
 
 
 def lookup_gchatmode(client_preferences):
-    return 1
     if redisEnabled:
         return 1
     if client_preferences['gchatMode'] is not -1:
